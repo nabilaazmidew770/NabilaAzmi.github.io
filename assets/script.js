@@ -173,6 +173,7 @@ function renderCategoryFilters() {
 }
 
 const projectSearch = select("#projectSearch");
+
 if (projectSearch) {
   projectSearch.addEventListener("input", (event) => {
     searchQuery = event.target.value;
@@ -224,6 +225,7 @@ function openProject(slug) {
   }
 
   activeProjectIndex = projects.findIndex((project) => project.slug === slug);
+
   if (activeProjectIndex < 0) return;
 
   fillProjectDialog(projects[activeProjectIndex]);
@@ -234,6 +236,7 @@ function openProject(slug) {
 
 function setActiveDialogImage(index) {
   const project = projects[activeProjectIndex];
+
   if (!project || !project.images.length) return;
 
   // Wrap around so scrolling past the final image returns to the first.
@@ -241,6 +244,7 @@ function setActiveDialogImage(index) {
     (index + project.images.length) % project.images.length;
 
   const mainImage = select("#dialogImage");
+
   mainImage.src = project.images[activeImageIndex];
   mainImage.alt =
     `${project.title} — project image ${activeImageIndex + 1} of ` +
@@ -251,11 +255,13 @@ function setActiveDialogImage(index) {
 
   thumbnails.forEach((thumbnail, thumbnailIndex) => {
     const isActive = thumbnailIndex === activeImageIndex;
+
     thumbnail.classList.toggle("active", isActive);
     thumbnail.setAttribute("aria-current", isActive ? "true" : "false");
   });
 
   const activeThumbnail = thumbnails[activeImageIndex];
+
   if (activeThumbnail && projectDialog?.open) {
     activeThumbnail.scrollIntoView({
       behavior: "smooth",
@@ -272,6 +278,7 @@ function fillProjectDialog(project) {
   select("#dialogDescription").textContent = project.description;
 
   const thumbnailContainer = select("#dialogThumbs");
+
   thumbnailContainer.innerHTML = project.images
     .map(
       (source, index) => `
@@ -318,6 +325,7 @@ if (projectDialog) {
   // A cooldown prevents high-resolution mouse wheels and touchpads from
   // skipping several images from one small gesture.
   const dialogGallery = select(".dialog-gallery", projectDialog);
+
   let wheelAccumulator = 0;
   let wheelIsCoolingDown = false;
   let wheelCooldownTimer;
@@ -327,6 +335,7 @@ if (projectDialog) {
       "wheel",
       (event) => {
         const project = projects[activeProjectIndex];
+
         if (!projectDialog.open || !project) return;
 
         // The gallery owns the wheel while the pointer is over the image area.
@@ -347,12 +356,14 @@ if (projectDialog) {
         if (wheelIsCoolingDown || Math.abs(wheelAccumulator) < 35) return;
 
         const direction = wheelAccumulator > 0 ? 1 : -1;
+
         wheelAccumulator = 0;
         wheelIsCoolingDown = true;
 
         setActiveDialogImage(activeImageIndex + direction);
 
         window.clearTimeout(wheelCooldownTimer);
+
         wheelCooldownTimer = window.setTimeout(() => {
           wheelIsCoolingDown = false;
         }, 240);
@@ -399,7 +410,9 @@ if (projectDialog) {
   select("#prevProject").addEventListener("click", () => {
     activeProjectIndex =
       (activeProjectIndex - 1 + projects.length) % projects.length;
+
     fillProjectDialog(projects[activeProjectIndex]);
+
     history.replaceState(
       null,
       "",
@@ -409,7 +422,9 @@ if (projectDialog) {
 
   select("#nextProject").addEventListener("click", () => {
     activeProjectIndex = (activeProjectIndex + 1) % projects.length;
+
     fillProjectDialog(projects[activeProjectIndex]);
+
     history.replaceState(
       null,
       "",
@@ -424,7 +439,6 @@ if (projectDialog) {
     });
   }
 }
-
 
 /* --------------------------------------------------------------------------
    Keep presentation text read-only
@@ -462,5 +476,72 @@ if (projectDialog) {
     ) {
       event.preventDefault();
     }
+  });
+})();
+
+/* --------------------------------------------------------------------------
+   Randomize homepage hero images on every page load
+   -------------------------------------------------------------------------- */
+(() => {
+  const heroImages = [
+    {
+      src: "assets/images/villa-seraya-01.webp",
+      alt: "Villa Seraya exterior",
+    },
+    {
+      src: "assets/images/villa-buwit-01.webp",
+      alt: "Villa Buwit exterior",
+    },
+    {
+      src: "assets/images/villa-nyanyi-01.webp",
+      alt: "Villa Nyanyi exterior",
+    },
+    {
+      src: "assets/images/red-dakoci-bali-01.webp",
+      alt: "Red Dakoci restaurant",
+    },
+    {
+      src: "assets/images/spbe-bali-office-01.webp",
+      alt: "SPBE Bali Office interior",
+    },
+    {
+      src: "assets/images/the-wings-bali-01.webp",
+      alt: "The Wings Bali interior",
+    },
+    {
+      src: "assets/images/loi-spa-bali-01.webp",
+      alt: "LOI Spa Bali interior",
+    },
+    {
+      src: "assets/images/villa-jimbaran-01.webp",
+      alt: "Villa Jimbaran interior",
+    },
+  ];
+
+  const heroSlots = [
+    document.querySelector(".hero-card.one img"),
+    document.querySelector(".hero-card.two img"),
+    document.querySelector(".hero-card.three img"),
+  ].filter(Boolean);
+
+  if (!heroSlots.length) return;
+
+  // Shuffle the image list so the same image is not used twice.
+  const shuffledImages = [...heroImages];
+
+  for (let index = shuffledImages.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+
+    [shuffledImages[index], shuffledImages[randomIndex]] = [
+      shuffledImages[randomIndex],
+      shuffledImages[index],
+    ];
+  }
+
+  heroSlots.forEach((imageElement, index) => {
+    const selectedImage = shuffledImages[index];
+
+    imageElement.src = selectedImage.src;
+    imageElement.alt = selectedImage.alt;
   });
 })();

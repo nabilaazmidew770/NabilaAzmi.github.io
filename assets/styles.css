@@ -1096,3 +1096,62 @@ svg {
   -webkit-user-drag: none;
   user-drag: none;
 }
+
+/* --------------------------------------------------------------------------
+   Font Awesome social and contact icons
+   -------------------------------------------------------------------------- */
+.socials {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+  font-weight: 800;
+}
+
+.socials a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.socials a:hover {
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.socials i {
+  width: 18px;
+  color: var(--accent);
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.contact-item span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.contact-item span i {
+  width: 18px;
+  color: var(--accent);
+  font-size: 1rem;
+  text-align: center;
+}
+
+.contact-item a {
+  overflow-wrap: anywhere;
+}
+
+.copyright a {
+  font-weight: 700;
+  transition: color 0.2s ease;
+}
+
+.copyright a:hover {
+  color: var(--accent);
+}
+

@@ -11,3 +11,18 @@ The website is built with plain HTML, CSS, and JavaScript. It does not require a
 - Projects — searchable and filterable project collection with interactive image galleries
 
 - Contact — direct email, WhatsApp, Instagram, and location information
+
+### What do add
+
+#### Projects
+- Input existing projects to the project page ⏳
+- More detail describing the projects (Timeline and Address) ⏳
+- Furnitures
+
+#### Home
+- Add more capabilities (Interior Consultant) ⏳
+- 
+
+#### Contacts
+- LinkedIn ✅
+- 
